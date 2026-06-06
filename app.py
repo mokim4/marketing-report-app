@@ -2,39 +2,100 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# إعدادات الصفحة لتناسب الهاتف
-st.set_page_config(page_title="مساعد نيو فيجن", page_icon="👑", layout="centered")
+# 1. إعدادات الصفحة المتقدمة للمظهر الاحترافي
+st.set_page_config(
+    page_title="مساعد نيو فيجن الاحترافي",
+    page_icon="👑",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
 
-# تنسيق مخصص للهواتف (CSS) لتكبير الأزرار وتسهيل القراءة
+# 2. حزمة تصميم احترافية مخصصة للهواتف واللغة العربية (CSS Injection)
 st.markdown("""
     <style>
+    /* تحسين خطوط الواجهة والمحاذاة العربية */
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@4family=Tajawal:wght@500;700&display=swap');
+    
+    html, body, [data-testid="stSidebarUserContent"], .stApp {
+        font-family: 'Tajawal', sans-serif;
+        direction: rtl;
+        text-align: right;
+    }
+    
+    /* ضبط العناوين والمحاذاة جهة اليمين */
+    h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
+        text-align: right !important;
+        direction: rtl !important;
+    }
+    
+    /* تجميل البطاقات وصناديق الإدخال */
+    div.stTextInput > div > div > input {
+        direction: rtl !important;
+        text-align: right !important;
+        border-radius: 12px !important;
+        border: 1px solid #3e424b !important;
+        padding: 10px 15px !important;
+    }
+    
+    div.stTextArea > div -> textarea {
+        direction: rtl !important;
+        text-align: right !important;
+        border-radius: 12px !important;
+        border: 1px solid #3e424b !important;
+    }
+    
+    /* ترقية تصميم الأزرار لتصبح فخمة وتفاعلية */
     .stButton>button {
         width: 100%;
-        border-radius: 10px;
-        height: 3em;
-        background-color: #FF4B4B;
-        color: white;
-        font-weight: bold;
+        border-radius: 14px !important;
+        height: 3.2em !important;
+        background: linear-gradient(135deg, #FF4B4B 0%, #CC1111 100%) !important;
+        color: white !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba(255, 75, 75, 0.3) !important;
+        transition: all 0.3s ease !important;
     }
-    textarea {
-        direction: rtl;
+    
+    .stButton>button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(255, 75, 75, 0.5) !important;
     }
-    input {
-        direction: rtl;
+    
+    /* إخفاء القوائم الجانبية المزعجة على شاشات الهاتف */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* تجميل حاوية البيانات وجدول الحالات */
+    [data-testid="stDataEditor"] {
+        direction: ltr !important; /* للحفاظ على تنسيق جدول الأرقام */
+        border-radius: 12px !important;
+        overflow: hidden;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("👑 نظام إدارة التقارير اليومية")
-st.write("صُمم خصيصاً لتسهيل متابعة وتوليد تقارير العروض اليومية.")
+# ترويسة التطبيق الفخمة
+st.markdown("<h1 style='text-align: center; color: #FF4B4B; margin-bottom: 5px;'>👑 لوحة تحكم التقارير الذكية</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #888b94; font-size: 14px;'>النظام المطور لإدارة العروض والمتابعات اليومية بدقة واحترافية</p>", unsafe_allow_html=True)
+st.markdown("---")
 
-# إدخال البيانات الأساسية
-with st.expander("👤 البيانات الأساسية (اضغط للتعديل)", expanded=True):
-    my_name = st.text_input("اسمك الشخصي:", "مسوق نيو فيجن")
-    upline_name = st.text_input("اسم الأبلاين:", "")
-    report_time = st.text_input("وقت التقرير:", "23:30h")
+# صندوق البيانات الأساسية بتصميم مرتب
+with st.container():
+    st.markdown("<h4 style='color: #FF4B4B;'>👤 إعدادات الهوية الشخصية</h4>", unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        my_name = st.text_input("اسمك الكريم:", "مسوق نيو فيجن")
+        report_time = st.text_input("توقيت الإرسال المعتاد:", "23:30h")
+    with col2:
+        upline_name = st.text_input("اسم الأبلاين المباشر:", "")
+        today_date_input = st.text_input("التاريخ الحالي:", datetime.now().strftime("%d / %m / %Y"))
 
-# الحالات المتاحة للفرز
+st.markdown("---")
+
+# قسم الحالات الثابتة
 statuses = [
     "لم يرد على الدعوة ⚪",
     "حضر الشرح (دخل اللايف) 🟢",
@@ -43,23 +104,24 @@ statuses = [
     "وعود بالتسجيل (ملأ الاستمارة) 📝"
 ]
 
-st.subheader("📥 1. أدخل القائمة اليومية")
+# صندوق إدخال البيانات المطور
+st.markdown("<h4 style='color: #FF4B4B;'>📥 1. نسخ ولصق القوائم اليومية</h4>", unsafe_allow_html=True)
 raw_input = st.text_area(
-    "أصق الأسماء والأرقام هنا مباشرة من الواتساب:", 
-    placeholder="مثال:\nNono__be — +213556377360\nKhelifa Kader — +213669882986",
-    height=150
+    "ألصق الأرقام والأسماء هنا مباشرة من جهات الاتصال أو الواتساب:", 
+    placeholder="مثال للتنسيق المدعوم تلقائياً:\n1. Nono__be — +213556377360\nKhelifa Kader — +213669882986",
+    height=160
 )
 
 if raw_input:
     lines = [line.strip() for line in raw_input.split('\n') if line.strip()]
     data = []
     
-    # تنظيف وتفكيك النص المدخل
+    # خوارزمية ذكية لتنظيف وتفكيك النصوص الملتصقة
     for line in lines:
-        # إزالة الترقيم التلقائي إن وجد (مثل: 1. أو 2-)
         clean_line = line
-        if '.' in line[:3]: clean_line = line.split('.', 1)[1].strip()
-        elif '-' in line[:3]: clean_line = line.split('-', 1)[1].strip()
+        # تنظيف الترقيم إن وجد
+        if '.' in line[:4]: clean_line = line.split('.', 1)[1].strip()
+        elif '-' in line[:4]: clean_line = line.split('-', 1)[1].strip()
         
         if "—" in clean_line:
             name, phone = clean_line.split("—", 1)
@@ -68,21 +130,22 @@ if raw_input:
             name, phone = clean_line.split(" - ", 1)
             data.append({"الاسم": name.strip(), "الرقم": phone.strip(), "الحالة": statuses[0]})
         else:
-            data.append({"الاسم": "مستهدف جديد", "الرقم": clean_line.strip(), "الحالة": statuses[0]})
+            data.append({"الاسم": "مستهدف", "الرقم": clean_line.strip(), "الحالة": statuses[0]})
     
     df = pd.DataFrame(data)
     
-    st.subheader("🔄 2. حدد حالة كل رقم")
-    st.caption("اضغط على خانة 'الحالة' بجانب كل رقم لتغيير وضع المستهدف الحالي:")
+    st.markdown("---")
+    st.markdown("<h4 style='color: #FF4B4B;'>🔄 2. فرز وتحديث الحالات بنقرة زر</h4>", unsafe_allow_html=True)
+    st.caption("تصفح الجدول أدناه وقم بتغيير حالة كل شخص بناءً على تفاعله اليوم:")
     
-    # جدول تفاعلي ذكي وسريع على الهاتف
+    # عرض الجدول بشكل احترافي مع إخفاء الأعمدة غير الضرورية
     edited_df = st.data_editor(df, hide_index=True, use_container_width=True)
     
-    st.subheader("📊 3. استخراج التقرير النهائي")
-    if st.button("👑 توليد التقرير المنسق لنسخه للواتساب"):
-        today_date = datetime.now().strftime("%d / %m / %Y")
-        
-        # الحسابات الإحصائية
+    st.markdown("---")
+    st.markdown("<h4 style='color: #FF4B4B;'>📊 3. استخراج التقرير الفوري</h4>", unsafe_allow_html=True)
+    
+    if st.button("👑 توليد التقرير النهائي للواتساب"):
+        # حساب الإحصائيات الدقيقة
         total = len(edited_df)
         attended = len(edited_df[edited_df['الحالة'] == statuses[1]])
         absent = len(edited_df[edited_df['الحالة'] == statuses[2]])
@@ -90,9 +153,9 @@ if raw_input:
         registered = len(edited_df[edited_df['الحالة'] == statuses[4]])
         no_reply = len(edited_df[edited_df['الحالة'] == statuses[0]])
         
-        # صياغة النص النهائي للتقرير ليتوافق مع الجداول والرموز المطلوبة
+        # صياغة النص النهائي للتقرير ليتوافق تماماً مع صيغة الواتساب والجداول المطلوبة
         report_text = f"""👑 *تقرير اليوم* 👑  
-📅 *الخميس*: {today_date}  
+📅 *التاريخ*: {today_date_input}  
 ⏰ *الساعة* : {report_time}  
 ✨ *الاسم*: *{my_name}*  
 👥 *من طرف الأبلاين*: *{upline_name}*  
@@ -117,7 +180,6 @@ if raw_input:
 | :--- | :--- |
 | *دخلوا الشرح بنجاح ✅* | """
         
-        # إضافة الأرقام حسب فئاتها
         if attended > 0:
             for r in edited_df[edited_df['الحالة'] == statuses[1]].to_dict('records'):
                 report_text += f"• `{r['الرقم']}` ({r['الاسم']})<br>"
@@ -149,5 +211,5 @@ if raw_input:
         
         report_text += " |"
 
-        st.success("🎉 تم توليد التقرير بنجاح! انسخه بالكامل من الصندوق أدناه:")
-        st.text_area("📋 التقرير الجاهز للنسخ:", report_text, height=350)
+        st.success("🎉 ممتاز! تم استخراج التقرير بجداول فخمة ومتوافقة مع نظام الأبلاين:")
+        st.text_area("📋 اضغط مطولاً داخل الصندوق لنسخ التقرير بالكامل للأبلاين:", report_text, height=350)
